@@ -52,8 +52,19 @@ if opt == "Add expenses":
             "description": description
         }
 
-    response = requests.post(f"{server_loc}/add_expense", params=data)
+    data = {
+    "title": title,
+    "amount": amount,
+    "category": category,
+    "payment_method": payment_method,
+    "expense_date": str(expense_date),
+    "description": description
+    }
 
+    response = requests.post(
+    f"{server_loc}/add_expense",
+    json=data
+    )
     st.write("STATUS:", response.status_code)
     st.write("RESPONSE:", response.text)
 
