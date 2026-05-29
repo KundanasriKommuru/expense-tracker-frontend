@@ -1,4 +1,3 @@
-
 import streamlit as st
 import requests
 import pandas as pd
@@ -18,32 +17,13 @@ if opt == "Add expenses":
     st.header("Add New Expense")
     date = st.date_input("Date")
     category = st.selectbox("Category",
-        [
-            "Food",
-            "Travel",
-            "Shopping",
-            "Bills",
-            "Entertainment",
-            "Health",
-            "Education",
-            "Other"
-        ])
-
-    amount = st.number_input("Amount",min_value=0.0,step=0.01)
+        ["Food","Travel","Shopping","Bills","Entertainment","Health","Education","Other"])
+    amount = st.number_input("Amount", min_value=0.0, step=0.01)
 
     payment_method = st.selectbox("Payment Method",
-        [
-            "Cash",
-            "Credit Card",
-            "Debit Card",
-            "Online Payment",
-            "Other"
-        ])
-
+        ["Cash","Credit Card","Debit Card","Online Payment","Other"])
     description = st.text_area("Description")
-
     if st.button("Add Expense"):
-
         data = {
             "date": str(date),
             "category": category,
@@ -51,27 +31,11 @@ if opt == "Add expenses":
             "payment_method": payment_method,
             "description": description
         }
-
-    data = {
-    "title": title,
-    "amount": amount,
-    "category": category,
-    "payment_method": payment_method,
-    "expense_date": str(expense_date),
-    "description": description
-    }
-
-    response = requests.post(
-    f"{server_loc}/add_expense",
-    json=data
-    )
-    st.write("STATUS:", response.status_code)
-    st.write("RESPONSE:", response.text)
-
-    if response.status_code == 200:
+        response = requests.post(
+            f"{server_loc}/add_expense",data=data   # IMPORTANT (matches your FastAPI)
+        )
         st.success("Expense added successfully!")
-    else:
-        st.error("Something went wrong")
+
             
 elif opt == "View expenses":
     st.header("View Expenses")
@@ -127,7 +91,6 @@ elif opt == "Update expense":
     )
 
     description = st.text_area("Description")
-
     if st.button("Update Expense"):
 
         data = {
@@ -135,15 +98,14 @@ elif opt == "Update expense":
             "category": category,
             "amount": amount,
             "payment_method": payment_method,
-            "description": description
-        }
+            "description": description        }
 
-        response = requests.put(f"{server_loc}/update_expense/{expense_id}",json=data)
+        response = requests.put(
+        f"{server_loc}/update_expense/{expense_id}",data=data)
+
+        st.success("Expense updated successfully!")
+
         
-        if response.status_code == 200:
-            st.success("Expense updated successfully!")
-
-            
 elif opt == "Delete expense":
 
     st.header("Delete Expense")
